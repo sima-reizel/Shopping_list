@@ -10,6 +10,7 @@ import { useCategory } from '../../hooks/useCategory';
 import { Product, fetchAllProd } from '../product/productSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../app/store';
+import '../homePage.css'
 
 // Interface to track items with their quantities
 interface CategoryItems {
@@ -85,7 +86,7 @@ export default function Tabs() {
   
   return (
     <>
-      <h2>יש לאסוף מוצרים אלה במחלקות המתאמות</h2>
+      <h2 className='title'>יש לאסוף מוצרים אלה במחלקות המתאמות</h2>
       <Box sx={{ width: '100%', typography: 'body1', paddingTop: '3%' }}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
