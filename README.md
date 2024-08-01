@@ -6,7 +6,7 @@ Clone the repository
 ## sever
 1. Enter in the command line to server 
 2. run npm install
-3. run npm build
+3. run npm run build
 4. run npm run start
 5. You will get:
   - Server is listening on http://localhost:4000
