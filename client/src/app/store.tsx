@@ -1,0 +1,18 @@
+import { configureStore } from '@reduxjs/toolkit'
+import productSlice from '../components/product/productSlice'
+import categorySlice from '../components/category/categorySlice'
+
+export const store = configureStore({
+  reducer: {
+    products: productSlice,
+    categories: categorySlice
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+
+// Export types for the state and dispatch to be used in your components
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

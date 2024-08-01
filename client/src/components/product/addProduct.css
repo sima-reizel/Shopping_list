@@ -1,0 +1,17 @@
+.stack{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: #f0f0f0;
+  width: 100%;
+  padding-bottom: 2%;
+}
+.div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: #cfe6e7;
+  width: 100%;
+}
