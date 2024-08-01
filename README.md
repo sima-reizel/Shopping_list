@@ -27,5 +27,3 @@ Clone the repository
 # known issuse
 1. The site is not responsive to screen size changes and does not look well enough.
 2. Many UX GUI improvments to be done.
-3. An option to save the shopping list in the order tabel to be develope
-4. The quantity of each column in the list to be correct
