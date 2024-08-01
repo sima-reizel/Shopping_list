@@ -1,5 +1,5 @@
 import AddProduct from './product/addProduct'
-import Tabs from './shopList/list'
+import {Tabs} from './shopList/list'
 import'./homePage.css'
 
 export const HomePage = () => {

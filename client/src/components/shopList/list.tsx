@@ -10,80 +10,53 @@ import { useCategory } from '../../hooks/useCategory';
 import { Product, fetchAllProd } from '../product/productSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../app/store';
-import '../homePage.css'
+import '../homePage.css';
 
-// Interface to track items with their quantities
 interface CategoryItems {
-  [key: string]: Record<string, number>;  // { categoryName: { productName: quantity } }
+  nameCategory: string;
+  items: Product[];
+  totalQty: number;
 }
 
-// Interface to track total quantities for each category
-interface CategoryQuantities {
-  [key: string]: number;  // { categoryName: totalQuantity }
-}
-
-export default function Tabs() {
-  const { addProduct } = useProd();
+export const Tabs = () => {
   const [value, setValue] = useState<string>('1');
   const categories = useCategory();
-  
-  // Initialize items state as an empty object
-  const [items, setItems] = useState<CategoryItems>({});
-  
-  // Initialize total quantities state as an empty object
-  const [quantities, setQuantities] = useState<CategoryQuantities>({});
-  
+  const [productsByCategory, setProductsByCategory] = useState<CategoryItems[]>([]);
   const dispatch = useDispatch<AppDispatch>();
-  const { prodArr } = useSelector((state: RootState) => state.products);
-  
-  // Function to categorize items and aggregate quantities
-  const itemsByCategory = (item: Product) => {
-    setItems((prevItems) => {
-      const updatedItems = { ...prevItems };
-      
-      // Initialize the category object if it doesn't exist
-      if (!updatedItems[item.category]) {
-        updatedItems[item.category] = {};
+  const { prodArr, isProdAdded } = useSelector((state: RootState) => state.products);
+
+  const categorizeProducts = (products: Product[]) => {
+    const categoryMap: { [key: string]: CategoryItems } = {};
+
+    products.forEach(product => {
+      if (!categoryMap[product.category]) {
+        categoryMap[product.category] = {
+          nameCategory: product.category,
+          items: [],
+          totalQty: 0,
+        };
       }
-      
-      // Add or update the item with its count
-      updatedItems[item.category][item.name] = item.cnt;
-      
-      return updatedItems;
+      categoryMap[product.category].items.push(product);
+      categoryMap[product.category].totalQty += product.cnt || 1;
     });
 
-    // Update quantities state
-    setQuantities((prevQuantities) => {
-      const updatedQuantities = { ...prevQuantities };
-      
-      // Initialize the quantity for the category if it doesn't exist
-      if (!updatedQuantities[item.category]) {
-        updatedQuantities[item.category] = 0;
-      }
-      
-      // Add the item count to the category total quantity
-      updatedQuantities[item.category] = +1
-      
-      return updatedQuantities;
-    });
+    setProductsByCategory(Object.values(categoryMap));
   };
-  
-  // Fetch products on component mount
+
   useEffect(() => {
     dispatch(fetchAllProd());
   }, [dispatch]);
-  
-  // Categorize products when `prodArr` updates
+
   useEffect(() => {
-    prodArr.forEach((prod: Product) => {
-      itemsByCategory(prod);
-    });
-  }, [prodArr]);
-  
+    if (prodArr.length > 0) {
+      categorizeProducts(prodArr);
+    }
+  }, [prodArr])
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-  
+
   return (
     <>
       <h2 className='title'>יש לאסוף מוצרים אלה במחלקות המתאמות</h2>
@@ -91,34 +64,40 @@ export default function Tabs() {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
-              {categories.map((category, index) => (
-                <Tab
-                  label={`${category.name} (${quantities[category.name] || 0})`} // Display category name and total quantity
-                  value={category.name}
-                  key={index}
-                />
-              ))}
+              {categories.map((category, index) => {
+                const categoryData = productsByCategory.find(c => c.nameCategory === category.name);
+                return (
+                  <Tab
+                    label={`${category.name} (${categoryData?.totalQty || 0})`}
+                    value={category.name}
+                    key={index}
+                  />
+                );
+              })}
             </TabList>
           </Box>
-          {categories.map((category, index) => (
-            <TabPanel value={category.name} key={index}>
-              {items[category.name] && Object.keys(items[category.name]).length ? (
-                Object.entries(items[category.name]).map(([itemName, itemQty], idx) => (
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }} key={idx}>
-                    <div className='div'>{itemName}</div>
-                    <div>|</div>
-                    <div className='div'>{itemQty} כמות</div>
+          {categories.map((category, index) => {
+            const categoryData = productsByCategory.find(c => c.nameCategory === category.name);
+            return (
+              <TabPanel value={category.name} key={index}>
+                {categoryData && categoryData.items.length ? (
+                  categoryData.items.map((item, idx) => (
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }} key={idx}>
+                      <div className='div'>{item.name}</div>
+                      <div>|</div>
+                      <div className='div'>{item.cnt} כמות</div>
+                    </Box>
+                  ))
+                ) : (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    אין פריטים בקטגוריה זו
                   </Box>
-                ))
-              ) : (
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                  אין פריטים בקטגוריה זו
-                </Box>
-              )}
-            </TabPanel>
-          ))}
+                )}
+              </TabPanel>
+            );
+          })}
         </TabContext>
       </Box>
     </>
   );
-}
+};

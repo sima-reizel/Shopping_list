@@ -62,13 +62,16 @@ export default function AddProduct() {
   const submitProduct = () => {
     addProduct({name: prodNameRef.current.value, category: prodCategoryRef.current.value})
   }
+  const sumItems = (items): number => {
+    return items.reduce((sum, item) => sum + item?.cnt, 0);
+  }
 
   useEffect(() => {
     dispatch(fetchAllProd())
   }, [dispatch])
 
   useEffect(() => {
-    setTotalQty(prodArr.length || 0)
+    setTotalQty(sumItems(prodArr))
   }, [prodArr])
 
   return (

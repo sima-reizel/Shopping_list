@@ -14,10 +14,9 @@ export const get = async (req: Request, res: Response) => {
 }
 
 export const post = async (req: Request, res: Response) => {
-    console.info(req.body)
     try {
-        const { name: prodName, ...rest } = req.body
-        let product = await Product.findOne({ name: prodName })
+        const { name: prodName, category: prodCategory,...rest } = req.body
+        let product = await Product.findOne({ name: prodName, category: prodCategory})
 
         if (product) {
             product.set({
@@ -27,7 +26,7 @@ export const post = async (req: Request, res: Response) => {
             await product.save()
             res.status(200).json(product)
         } else {
-            product = new Product({ name: prodName, cnt: 1, ...rest })
+            product = new Product({ name: prodName, cnt: 1,category: prodCategory, ...rest })
             await product.save()
             res.status(200).json(product)
         }

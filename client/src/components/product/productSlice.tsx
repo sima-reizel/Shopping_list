@@ -9,8 +9,7 @@ export interface Product {
 }
 
 export interface ProductState {
-  isProdAdded: {
-    name: string
+  isProdAdded: Product & {
     status: 'idle' | 'pending' | 'fulfilled' | 'rejected'
   }
   prodArr: Product[]
@@ -20,6 +19,7 @@ const initialState: ProductState = {
     isProdAdded: {
         name: '',
         status: 'idle',
+        category: ''
       },
       prodArr: []
 }
