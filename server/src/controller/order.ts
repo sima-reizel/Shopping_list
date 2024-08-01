@@ -16,7 +16,12 @@ export const get = async (req: Request, res: Response) => {
 
 export const post = async (req: Request, res: Response) => {
     try {
-        const newOrder = new Order(req.body)
+        const orderItems = req.body.items
+        const total = calcTotalOrder(orderItems)
+        const newOrder = new Order({
+            items: orderItems,
+            total: total
+          })
         await newOrder.save()
         res.status(200).json(newOrder)
     } catch (error) {
@@ -29,4 +34,8 @@ export const post = async (req: Request, res: Response) => {
             res.status(500).json({ message: 'Internal Server Error' });
         }
     }
+}
+
+const calcTotalOrder = (orderItems): number =>{
+    return orderItems.reduce((sum, item) => sum + item?.cnt, 0);
 }

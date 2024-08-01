@@ -1,8 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose'
 
 interface IOrderItem {
-    productName: string
-    qty: number,
+    name: string
+    cnt: number,
     category: string
 }
 
@@ -12,14 +12,14 @@ interface IOrder extends Document{
 }
 
 const OrderItemSchema = new Schema<IOrderItem>({
-    productName: { type: String, required: true },
-    qty: { type: Number, required: true },
+    name: { type: String, required: true },
+    cnt: { type: Number, required: true },
     category: { type: String, required: true }
 })
 
 const OrderSchema = new Schema<IOrder>({
     items: [OrderItemSchema],
-    total: { type: Number, required: true }
+    total: { type: Number, required: false }
 })
 
 const Order = mongoose.model<IOrder>('Order', OrderSchema)

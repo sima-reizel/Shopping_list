@@ -23,7 +23,7 @@ export const Tabs = () => {
   const categories = useCategory();
   const [productsByCategory, setProductsByCategory] = useState<CategoryItems[]>([]);
   const dispatch = useDispatch<AppDispatch>();
-  const { prodArr, isProdAdded } = useSelector((state: RootState) => state.products);
+  const { prodArr } = useSelector((state: RootState) => state.products);
 
   const categorizeProducts = (products: Product[]) => {
     const categoryMap: { [key: string]: CategoryItems } = {};
@@ -59,7 +59,6 @@ export const Tabs = () => {
 
   return (
     <>
-      <h2 className='title'>יש לאסוף מוצרים אלה במחלקות המתאמות</h2>
       <Box sx={{ width: '100%', typography: 'body1', paddingTop: '3%' }}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

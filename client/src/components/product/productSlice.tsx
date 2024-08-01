@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { fetchAllProducts, addProductToDb } from '../../api/productService'
-import axios from 'axios'
 
 export interface Product {
   name: string
