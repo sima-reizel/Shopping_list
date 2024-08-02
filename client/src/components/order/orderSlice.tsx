@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { addOrderToDb } from '../../api/orderService';
+import { addOrderToDb, fetchAllOrder } from '../../api/orderService';
 import { Product } from '../product/productSlice';
 
 interface Order {
@@ -24,23 +24,18 @@ const initialState: OrderState = {
 export const fetchAllOrders = createAsyncThunk(
   'fetchAllOrders',
   async () => {
-    const response = await fetchAllOrders();
-    return response;
+    const response = await fetchAllOrder();
+    return response
   }
 );
 
 export const addOrder = createAsyncThunk(
   'addOrder',
-  async (order: Order, { rejectWithValue }) => {
-    try {
-      const response = await addOrderToDb(order);
-      return response;
-    } catch (error) {
-      console.error('Error adding order:', error);
-      return rejectWithValue(error);
-    }
+  async (order: Order) => {
+      const response = await addOrderToDb(order)
+      return response
   }
-);
+)
 
 const orderSlice = createSlice({
   name: 'order',
@@ -49,26 +44,22 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllOrders.fulfilled, (state, action: PayloadAction<Order[]>) => {
-        const { payload: result } = action;
-        state.ordersArr = result;
+        const { payload: result } = action
+        state.ordersArr = result
       })
       .addCase(addOrder.pending, (state) => {
-        state.isOrderAdded.status = 'pending';
-        console.log('Pending state');
-        alert('pending');
+        state.isOrderAdded.status = 'pending'
       })
       .addCase(addOrder.fulfilled, (state, action: PayloadAction<Order>) => {
-        state.isOrderAdded.status = 'fulfilled';
-        const { payload: result } = action;
-        console.log('Fulfilled state', result);
-        alert(`Order added successfully with total: ${result.total} items`);
+        state.isOrderAdded.status = 'fulfilled'
+        const { payload: result } = action
+        alert(`Order added successfully with : ${result.total} items`)
       })
       .addCase(addOrder.rejected, (state, action) => {
-        state.isOrderAdded.status = 'rejected';
-        console.log('Rejected state', action.payload);
-        alert(`Failed to add order: ${action.payload}`);
-      });
+        state.isOrderAdded.status = 'rejected'
+        alert(`Failed to add order: ${action.error.message}`)
+      })
   },
-});
+})
 
-export default orderSlice.reducer;
+export default orderSlice.reducer

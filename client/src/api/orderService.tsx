@@ -5,9 +5,9 @@ const BASE_URL = 'http://localhost:4000/order'
 
 interface Order {
     items: Product[]
-  }
+}
 
-export const fetchAllOrders = async () => {
+export const fetchAllOrder = async () => {
   const response = await axios.get(`${BASE_URL}/`)
   return response.data
 }

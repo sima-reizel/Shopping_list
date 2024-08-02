@@ -57,9 +57,9 @@ const productSlice = createSlice({
         state.isProdAdded.status = 'fulfilled'
         alert(`${state.isProdAdded.name}:  added successfully`)
       })
-      .addCase(addProd.rejected, (state) => {
+      .addCase(addProd.rejected, (state, action) => {
         state.isProdAdded.status = 'rejected'
-        alert(state.isProdAdded.status)
+        alert(action.error.message)
       })
   },
 })

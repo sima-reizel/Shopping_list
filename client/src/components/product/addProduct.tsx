@@ -56,6 +56,7 @@ export default function AddProduct() {
   const prodCategoryRef = useRef<HTMLSelectElement>(null)
   const dispatch = useDispatch<AppDispatch>()
   const { prodArr } = useSelector((state: RootState) => state.products)
+  const { isOrderAdded } = useSelector((state: RootState) => state.orders)
   const handleChange = (event: { target: { value: string } }) => {
     setCategory(event.target.value)
   }
@@ -68,7 +69,7 @@ export default function AddProduct() {
 
   useEffect(() => {
     dispatch(fetchAllProd())
-  }, [dispatch])
+  }, [dispatch, isOrderAdded.status === 'fulfilled'])
 
   useEffect(() => {
     setTotalQty(sumItems(prodArr))

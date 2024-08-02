@@ -1,15 +1,13 @@
 import { Router, Request, Response } from 'express'
 import Order from '../model/order.model'
-import { info } from 'console'
-
-const router = Router()
+import Product from '../model/product.model'
 
 export const get = async (req: Request, res: Response) => {
     try {
         const orders = await Order.find()
         res.status(200).json(orders)
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching orders:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
@@ -17,20 +15,24 @@ export const get = async (req: Request, res: Response) => {
 export const post = async (req: Request, res: Response) => {
     try {
         const orderItems = req.body.items
-        const total = calcTotalOrder(orderItems)
-        const newOrder = new Order({
-            items: orderItems,
-            total: total
-          })
-        await newOrder.save()
-        res.status(200).json(newOrder)
+        if( orderItems.length ) {
+            const total = calcTotalOrder(orderItems)
+            const newOrder = new Order({
+                items: orderItems,
+                total: total
+            })
+            await newOrder.save()
+            removeAllProducts(Product)
+            res.status(200).json(newOrder)
+        }
+        else {
+            res.status(400).json({ message: 'You must select at least one product'})
+        }
     } catch (error) {
-        if (error.name === 'MongoServerError' && error.code === 11000) {
-            res.status(400).json({ message: 'Book with the same name already exists.' })
-        } else if (error.name === 'ValidationError') {
+        if (error.name === 'ValidationError') {
             res.status(400).json({ message: error.message })
         } else {
-            console.error('Error adding new book:', error)
+            console.error('Error adding new order:', error)
             res.status(500).json({ message: 'Internal Server Error' });
         }
     }
@@ -38,4 +40,14 @@ export const post = async (req: Request, res: Response) => {
 
 const calcTotalOrder = (orderItems): number =>{
     return orderItems.reduce((sum, item) => sum + item?.cnt, 0);
+}
+
+const removeAllProducts = async (collectionName) => {
+    try { 
+       const result = await collectionName.deleteMany({})
+       return result
+    }
+    catch(e) {
+       console.error(`Faild to remove all documents ${collectionName}`, e.error)
+    }
 }

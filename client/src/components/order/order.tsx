@@ -9,6 +9,7 @@ import { addOrder } from './orderSlice'
 export const Order = () =>{
     const { prodArr } = useProd()
     const dispatch = useDispatch<AppDispatch>()
+    // const { prodArr } = useSelector((state: RootState) => state.products)
 
     const submitOrder = () =>{
         dispatch(addOrder({items: prodArr}))

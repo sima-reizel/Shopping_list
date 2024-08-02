@@ -24,6 +24,7 @@ export const Tabs = () => {
   const [productsByCategory, setProductsByCategory] = useState<CategoryItems[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const { prodArr } = useSelector((state: RootState) => state.products);
+  const { isOrderAdded } = useSelector((state: RootState) => state.orders);
 
   const categorizeProducts = (products: Product[]) => {
     const categoryMap: { [key: string]: CategoryItems } = {};
@@ -45,12 +46,12 @@ export const Tabs = () => {
 
   useEffect(() => {
     dispatch(fetchAllProd());
-  }, [dispatch]);
+  }, [dispatch, isOrderAdded.status === 'fulfilled'])
 
   useEffect(() => {
-    if (prodArr.length > 0) {
+    // if (prodArr.length > 0) {
       categorizeProducts(prodArr);
-    }
+    // }
   }, [prodArr])
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {

@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import productSlice from '../components/product/productSlice'
 import categorySlice from '../components/category/categorySlice'
+import orderSlice from '../components/order/orderSlice'
 
 export const store = configureStore({
   reducer: {
     products: productSlice,
-    categories: categorySlice
+    categories: categorySlice,
+    orders: orderSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

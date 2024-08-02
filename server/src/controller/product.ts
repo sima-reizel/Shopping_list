@@ -32,12 +32,10 @@ export const post = async (req: Request, res: Response) => {
         }
         
     } catch (error) {
-        if (error.name === 'MongoServerError' && error.code === 11000) {
-            res.status(400).json({ message: 'Book with the same name already exists.' })
-        } else if (error.name === 'ValidationError') {
+       if (error.name === 'ValidationError') {
             res.status(400).json({ message: error.message })
         } else {
-            console.error('Error adding new book:', error)
+            console.error('Error adding new product:', error)
             res.status(500).json({ message: 'Internal Server Error' });
         }
     }
