@@ -22,7 +22,6 @@ Clone the repository
 
 ### I know that I have to fix the responsive ablity issue.
 ### I know that I have to fix the design of the application.
-### I know that I have to fix issues that not working or missing.
 
 # known issuse
 1. The site is not responsive to screen size changes and does not look well enough.
