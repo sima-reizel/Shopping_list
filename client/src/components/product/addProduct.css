@@ -1,17 +1,21 @@
-.stack{
+/* Container for centering content */
+.stack {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-color: #d4d0d3;
   width: 100%;
+  background-color: #d4d0d3;
   padding-bottom: 2%;
 }
-.div{
+
+/* Wrapper for additional styling, if needed */
+.div {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-color: #dadada;
   width: 100%;
+  background-color: #dadada;
 }

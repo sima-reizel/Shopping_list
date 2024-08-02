@@ -22,20 +22,20 @@ const initialState: OrderState = {
 };
 
 export const fetchAllOrders = createAsyncThunk(
-  'fetchAllOrders',
+  'order/fetchAllOrders',
   async () => {
-    const response = await fetchAllOrder();
-    return response
+      const response = await fetchAllOrder();
+      return response;
   }
 );
 
 export const addOrder = createAsyncThunk(
-  'addOrder',
+  'order/addOrder',
   async (order: Order) => {
-      const response = await addOrderToDb(order)
-      return response
+      const response = await addOrderToDb(order);
+      return response;
   }
-)
+);
 
 const orderSlice = createSlice({
   name: 'order',
@@ -44,22 +44,21 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllOrders.fulfilled, (state, action: PayloadAction<Order[]>) => {
-        const { payload: result } = action
-        state.ordersArr = result
+        state.ordersArr = action.payload;
       })
       .addCase(addOrder.pending, (state) => {
-        state.isOrderAdded.status = 'pending'
+        state.isOrderAdded.status = 'pending';
       })
       .addCase(addOrder.fulfilled, (state, action: PayloadAction<Order>) => {
-        state.isOrderAdded.status = 'fulfilled'
-        const { payload: result } = action
-        alert(`Order added successfully with : ${result.total} items`)
+        state.isOrderAdded.status = 'fulfilled';
+        const { total } = action.payload;
+        alert(`Order added successfully with ${total ?? 0} items`);
       })
       .addCase(addOrder.rejected, (state, action) => {
-        state.isOrderAdded.status = 'rejected'
-        alert(`Failed to add order: ${action.error.message}`)
-      })
+        state.isOrderAdded.status = 'rejected';
+        alert(`Failed to add order: ${action.error.message}`);
+      });
   },
-})
+});
 
-export default orderSlice.reducer
+export default orderSlice.reducer;
